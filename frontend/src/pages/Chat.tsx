@@ -1,18 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/chats/chat-item";
 import { ArrowUpRight } from "lucide-react";
-import { deleteUserChats, fetchUserChats, sendChatRequest } from "../api/chat";
+import { fetchUserChats, sendChatRequest } from "../api/chat";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { MessageSquareCode } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ModeToggle } from "@/components/theme/mode-toggle";
-import { Spinner } from "@/components/ui/spinner";
-import { logoutUser } from "@/api/auth";
 import UserMenu from "@/components/layout/user-menu";
+import { MessageSquareCode } from "lucide-react";
+import { toast } from "sonner";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -21,7 +18,7 @@ type ChatMessage = {
 
 export function Chat() {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const auth = useAuth();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const handleSubmit = async () => {
@@ -43,32 +40,29 @@ export function Chat() {
     inputRef.current.value = "";
   };
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      toast.success("Logged out successfully");
-    } catch (error) {
-      console.error("Failed to logout:", error);
-      toast.error("Failed to logout");
-    }
-  };
-
   useEffect(() => {
     fetchUserChats()
       .then((chats) => {
         setChatMessages(chats || []);
       })
-      .catch((error) => {
-        console.error("Failed to fetch chats:", error);
-        toast.error("Failed to load chats");
+      .catch(() => {
+        toast.error("Failed to load chats.");
       });
   }, []);
 
+  useEffect(() => {
+    if (chatMessages.length === 0) return;
+
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ block: "end" });
+    });
+  }, [chatMessages.length]);
+
   return (
-    <div className="w-screen md:h-screen flex p-4 items-center justify-center">
-      <div className="w-full md:max-w-6xl h-full min-h-[460px] md:max-h-[650px] 2xl:max-h-[800px] flex flex-col relative items-center overflow-hidden bg-background border border-primary rounded-2xl">
+    <div className="w-full h-full flex px-4 pt-4 items-center justify-center">
+      <div className="w-full md:max-w-6xl h-full min-h-[460px] md:max-h-[650px] 2xl:max-h-[800px] flex flex-col relative items-center bg-background border border-primary rounded-2xl overflow-hidden">
         {/* CONTROL PANEL */}
-        <div className="w-full p-8 flex justify-between">
+        <div className="w-full p-4 md:p-8 flex justify-between bg-muted">
           <div className="flex gap-2 items-center justify-center">
             <MessageSquareCode className="text-primary" />
             <h1 className="text-2xl font-bold text-primary">AI Chat Type</h1>
@@ -79,24 +73,41 @@ export function Chat() {
           </div>
         </div>
         {/* CHAT PANEL */}
-        <div className="w-full h-full p-8 flex flex-col items-center justify-center">
-          <div>
-            {chatMessages.map((message, index) => (
-              <ChatItem
-                key={index}
-                role={message.role}
-                content={message.content}
-              />
-            ))}
+        <div className="relative flex-1 min-h-0 ml-4 mr-0 mb-4 md:ml-8 md:mr-4 md:mb-8 flex flex-col overflow-hidden">
+          {/* CHAT MESSAGES */}
+          <ScrollArea className="flex-1 min-h-0">
+            <div className="pr-4">
+              {chatMessages.map((message, index) => (
+                <ChatItem
+                  key={index}
+                  role={message.role}
+                  content={message.content}
+                />
+              ))}
+              <div ref={messagesEndRef} className="pt-28" />
+            </div>
+          </ScrollArea>
+          {/* CHAT INPUT */}
+          <div className="absolute bottom-0 w-full pr-4">
+            <div className="w-full bg-background rounded-t-2xl">
+              <Card className="w-full">
+                <CardContent className="flex gap-2">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSubmit();
+                    }}
+                    className="flex gap-2 w-full"
+                  >
+                    <Input placeholder="Enter your message..." ref={inputRef} />
+                    <Button type="submit" variant="outline">
+                      <ArrowUpRight />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-          <Card className="w-full flex flex-col justify-between rounded-xl border">
-            <CardContent className="flex gap-2">
-              <Input placeholder="Enter your message..." />
-              <Button type="submit" variant="outline">
-                <ArrowUpRight />
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

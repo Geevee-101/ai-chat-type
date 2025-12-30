@@ -1,5 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
+import { MessageSquareCode } from "lucide-react";
 
 export function UserAvatar() {
   const auth = useAuth();
@@ -17,8 +18,7 @@ export function UserAvatar() {
 export function AIAvatar() {
   return (
     <Avatar>
-      <AvatarImage src="https://via.placeholder.com/150" alt="@ai" />
-      <AvatarFallback>AI</AvatarFallback>
+      <MessageSquareCode className="size-full p-1 text-black" />
     </Avatar>
   );
 }

@@ -1,4 +1,8 @@
-import { useAuth } from "../../context/AuthContext";
+import { AIAvatar, UserAvatar } from "../profile/avatars";
+import MarkdownIt from "markdown-it";
+import DOMPurify from "dompurify";
+
+const md = new MarkdownIt();
 
 export function ChatItem({
   role,
@@ -7,27 +11,36 @@ export function ChatItem({
   role: "user" | "assistant";
   content: string;
 }) {
-  const auth = useAuth();
   return role === "user" ? (
-    <div className="flex p-4 gap-4" style={{ backgroundColor: "#004d56" }}>
-      <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-medium flex-shrink-0">
-        {auth?.user?.name?.slice(0, 1)}
-        {auth?.user?.name?.split(" ")[1]?.slice(0, 1)}
-      </div>
-      <div>
-        <p className="text-xl text-white">{content}</p>
+    <div className="flex mt-4 justify-end">
+      <div className="md:max-w-[calc(100%-3.75rem)] flex justify-end border border-card rounded-xl overflow-hidden">
+        <div className="px-4 md:px-6 py-4 bg-secondary">
+          <div
+            className="md:text-lg text-secondary-foreground max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(md.render(content)),
+            }}
+          />
+        </div>
+        <div className="w-15 p-4 bg-card">
+          <UserAvatar />
+        </div>
       </div>
     </div>
   ) : (
-    <div
-      className="flex p-4 gap-4 my-4"
-      style={{ backgroundColor: "#004d5612" }}
-    >
-      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
-        <img src="openai.png" alt="openai" width={30} />
-      </div>
-      <div>
-        <p className="text-xl text-white">{content}</p>
+    <div className="flex mt-4">
+      <div className="md:max-w-[calc(100%-3.75rem)] flex border border-primary rounded-xl overflow-hidden">
+        <div className="w-15 p-4 bg-primary">
+          <AIAvatar />
+        </div>
+        <div className="px-4 md:px-6 py-4 bg-secondary">
+          <div
+            className="md:text-lg text-secondary-foreground max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(md.render(content)),
+            }}
+          />
+        </div>
       </div>
     </div>
   );

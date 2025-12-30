@@ -58,21 +58,24 @@ export function Login() {
   });
 
   return (
-    <div className="w-screen md:h-screen flex p-4 items-center justify-center">
-      <div className="w-full md:max-w-6xl h-full min-h-[460px] md:max-h-[650px] 2xl:max-h-[800px] flex flex-col md:flex-row relative items-center overflow-hidden bg-background border border-primary rounded-2xl">
-        <div className="absolute top-0 w-full flex p-8 justify-end">
+    <div className="w-full h-full flex px-4 pt-4 items-center justify-center">
+      <div className="w-full md:max-w-6xl h-full min-h-[460px] md:max-h-[650px] 2xl:max-h-[800px] flex flex-col md:flex-row relative items-center bg-background border border-primary rounded-2xl overflow-hidden">
+        <div className="absolute top-0 w-full flex p-4 md:p-8 justify-end">
           <ModeToggle />
         </div>
         {/* LOW-GOW COLUMN - LEFT SIDE */}
-        <div className="w-full md:w-1/2 h-full pt-6 pb-2 flex items-center justify-center">
+        <div className="w-full md:w-1/2 h-full pt-4 md:pt-6 pb-2 flex items-center justify-center">
           <div className="text-center">
-            <MessageSquareCode className="w-40 h-40 mx-auto mb-4 text-primary" />
-            <h1 className="text-2xl font-bold text-primary">AI Chat Type</h1>
+            <div className="flex md:flex-col md:mb-2 items-center justify-center gap-2">
+              <MessageSquareCode className="md:w-40 md:h-40 text-primary" />
+              <h1 className="text-2xl font-bold text-primary">AI Chat Type</h1>
+            </div>
+            <p className="text-muted-foreground">Powered by ChatGPT 4o Mini</p>
           </div>
         </div>
         {/* FORM COLUMN - RIGHT SIDE */}
-        <div className="w-full md:w-1/2 h-full p-8 flex flex-col items-center justify-center">
-          <Card className="w-full flex flex-col justify-between rounded-xl border">
+        <div className="w-full md:w-1/2 h-full p-4 md:p-8 flex flex-col items-center justify-center">
+          <Card className="w-full flex flex-col justify-between rounded-xl">
             <CardHeader>
               <CardTitle as="h2">Log In</CardTitle>
             </CardHeader>

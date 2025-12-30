@@ -7,26 +7,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "../profile/avatars";
 import { deleteUserChats } from "@/api/chat";
+import { logoutUser } from "@/api/auth";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export function UserMenu({
   setChatMessages,
 }: {
   setChatMessages: React.Dispatch<React.SetStateAction<any[]>>;
 }) {
+  const navigate = useNavigate();
+
   const handleDeleteChats = async () => {
     try {
       await deleteUserChats();
       setChatMessages([]);
-      toast.success("Chats deleted successfully");
+      toast.success("Chats deleted successfully.");
     } catch (error) {
-      console.error("Failed to delete chats:", error);
-      toast.error("Failed to delete chats");
+      toast.error("Failed to delete chats.");
     }
   };
 
-  const handleLogout = () => {
-    console.log("Logout");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      toast.success("Logged out successfully.");
+    } catch (error) {
+      toast.error("Failed to logout.");
+    }
   };
 
   return (

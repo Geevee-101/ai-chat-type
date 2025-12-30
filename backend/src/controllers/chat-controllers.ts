@@ -12,9 +12,9 @@ export const createChatCompletion = async (
   }
   const user = res.locals.user;
 
-  const chats = user.chat;
+  const chats = user.chats;
   chats.push({ role: "user", content: message });
-  user.chat = chats;
+  user.chats = chats;
 
   try {
     const chatResponse = await openai.chat.completions.create({
@@ -29,7 +29,7 @@ export const createChatCompletion = async (
         .json({ message: "Failed to generate chat response" });
     }
 
-    user.chat.push({ role: "assistant", content: assistantMessage });
+    user.chats.push({ role: "assistant", content: assistantMessage });
     await user.save();
   } catch (error: unknown) {
     const cause = error instanceof Error ? error.message : String(error);
@@ -37,7 +37,7 @@ export const createChatCompletion = async (
   }
 
   return res.status(200).json({
-    message: user.chat,
+    message: user.chats,
   });
 };
 
