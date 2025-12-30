@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "../profile/avatars";
 import { deleteUserChats } from "@/api/chat";
-import { logoutUser } from "@/api/auth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 export function UserMenu({
   setChatMessages,
@@ -17,6 +17,7 @@ export function UserMenu({
   setChatMessages: React.Dispatch<React.SetStateAction<any[]>>;
 }) {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleDeleteChats = async () => {
     try {
@@ -30,7 +31,8 @@ export function UserMenu({
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await auth?.logout();
+      setChatMessages([]);
       toast.success("Logged out successfully.");
     } catch (error) {
       toast.error("Failed to logout.");
