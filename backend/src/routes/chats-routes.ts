@@ -19,7 +19,6 @@ chatsRoutes.post(
   authenticateUser,
   createChatCompletion,
 );
-
 chatsRoutes.get("/", authenticateToken, authenticateUser, getUserChats);
 chatsRoutes.delete("/", authenticateToken, authenticateUser, deleteUserChats);
 

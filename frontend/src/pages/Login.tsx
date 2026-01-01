@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import * as z from "zod";
 import { useForm } from "@tanstack/react-form";
+import ResetDatabase from "@/components/layout/reset-database";
 import {
   Field,
   FieldError,
@@ -22,6 +23,7 @@ import { MessageSquareCode } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Spinner } from "@/components/ui/spinner";
+import { Separator } from "@/components/ui/separator";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -153,7 +155,8 @@ export function Login() {
             <Button variant="outline" className="w-full" asChild>
               <Link to="/signup">SIGN UP FOR NEW ACCOUNT</Link>
             </Button>
-            {/* <ResetDatabase /> */}
+            <Separator className="my-2" />
+            <ResetDatabase />
           </CardFooter>
         </Card>
       </div>

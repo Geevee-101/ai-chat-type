@@ -118,18 +118,26 @@ export function Chat() {
         <ScrollArea className="w-full h-full">
           <div className="pr-4">
             {isLoading && (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center py-8 gap-2">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-2">
                 <Spinner />
                 <p className="text-muted-foreground">Loading chats...</p>
               </div>
             )}
-            {chatMessages.map((message, index) => (
-              <ChatItem
-                key={index}
-                role={message.role}
-                content={message.content}
-              />
-            ))}
+            {chatMessages.length > 0 ? (
+              chatMessages.map((message, index) => (
+                <ChatItem
+                  key={index}
+                  role={message.role}
+                  content={message.content}
+                />
+              ))
+            ) : (
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
+                <p className="text-muted-foreground text-center">
+                  Ask a question or start a conversation.
+                </p>
+              </div>
+            )}
             {sendMessageMutation.isPending && (
               <ChatItem
                 role="assistant"
