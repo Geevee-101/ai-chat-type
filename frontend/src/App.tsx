@@ -6,10 +6,10 @@ import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/layout/footer";
 import type { JSX } from "react";
+import PageContainer from "./components/layout/page-container";
+import PageLoader from "./components/layout/page-loader";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { Spinner } from "@/components/ui/spinner";
-import PageLoader from "./components/layout/page-loader";
 
 function App() {
   const auth = useAuth();
@@ -24,14 +24,7 @@ function App() {
 
   function PublicRoute({ children }: { children: JSX.Element }) {
     if (auth?.isLoading) {
-      return (
-        <div className="h-full grid place-items-center">
-          <div className="flex flex-col items-center gap-2">
-            <Spinner />
-            <p className="text-muted-foreground">Loading...</p>
-          </div>
-        </div>
-      );
+      return <PageLoader />;
     }
 
     return !auth?.isLoggedIn ? children : <Navigate to="/" replace />;
@@ -46,7 +39,9 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <Chat />
+                  <PageContainer>
+                    <Chat />
+                  </PageContainer>
                 </ProtectedRoute>
               }
             />
@@ -54,7 +49,9 @@ function App() {
               path="/login"
               element={
                 <PublicRoute>
-                  <Login />
+                  <PageContainer>
+                    <Login />
+                  </PageContainer>
                 </PublicRoute>
               }
             />
@@ -62,7 +59,9 @@ function App() {
               path="/signup"
               element={
                 <PublicRoute>
-                  <Signup />
+                  <PageContainer>
+                    <Signup />
+                  </PageContainer>
                 </PublicRoute>
               }
             />
