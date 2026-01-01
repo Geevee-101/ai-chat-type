@@ -8,31 +8,39 @@ import {
 import { UserAvatar } from "../profile/avatars";
 import { deleteUserChats } from "@/api/chat";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-export function UserMenu({
-  setChatMessages,
-}: {
-  setChatMessages: React.Dispatch<React.SetStateAction<any[]>>;
-}) {
-  const navigate = useNavigate();
+export function UserMenu() {
   const auth = useAuth();
+  const queryClient = useQueryClient();
 
-  const handleDeleteChats = async () => {
-    try {
-      await deleteUserChats();
-      setChatMessages([]);
+  const deleteChatsMutation = useMutation({
+    mutationFn: deleteUserChats,
+    onMutate: async () => {
+      // Cancel ongoing queries to avoid race conditions
+      await queryClient.cancelQueries({ queryKey: ["chats"] });
+    },
+    onSuccess: () => {
+      // Refetch chats after deletion
+      queryClient.invalidateQueries({ queryKey: ["chats"] });
       toast.success("Chats deleted successfully.");
-    } catch (error) {
+    },
+    onError: () => {
       toast.error("Failed to delete chats.");
-    }
+    },
+  });
+
+  const handleDeleteChats = () => {
+    deleteChatsMutation.mutate();
   };
 
   const handleLogout = async () => {
     try {
       await auth?.logout();
-      setChatMessages([]);
+      // Clear all queries on logout
+      queryClient.clear();
       toast.success("Logged out successfully.");
     } catch (error) {
       toast.error("Failed to logout.");

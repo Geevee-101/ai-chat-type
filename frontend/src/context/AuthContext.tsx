@@ -11,8 +11,9 @@ type User = {
   email: string;
 };
 type UserAuth = {
-  isLoggedIn: boolean;
   user: User | null;
+  isLoggedIn: boolean;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -23,9 +24,10 @@ const AuthContext = createContext<UserAuth | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // check if user cookies are valid to skip login
+    // Check if user cookies are valid to skip login
     async function verifyStatus() {
       try {
         const data = await verifyAuthStatus();
@@ -36,6 +38,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         // If verification fails, user is not logged in
         setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
       }
     }
     verifyStatus();
@@ -65,6 +69,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const value = {
     user,
     isLoggedIn,
+    isLoading,
     signup,
     login,
     logout,

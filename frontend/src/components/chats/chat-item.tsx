@@ -1,15 +1,18 @@
 import { AIAvatar, UserAvatar } from "../profile/avatars";
 import MarkdownIt from "markdown-it";
 import DOMPurify from "dompurify";
+import { Spinner } from "../ui/spinner";
 
 const md = new MarkdownIt();
 
 export function ChatItem({
   role,
   content,
+  useSpinner = false,
 }: {
   role: "user" | "assistant";
   content: string;
+  useSpinner?: boolean;
 }) {
   return role === "user" ? (
     <div className="flex mt-4 justify-end">
@@ -33,7 +36,8 @@ export function ChatItem({
         <div className="w-15 p-4 bg-primary">
           <AIAvatar />
         </div>
-        <div className="px-4 md:px-6 py-4 bg-secondary">
+        <div className="px-4 md:px-6 py-4 bg-secondary flex items-center gap-2">
+          {useSpinner && <Spinner />}
           <div
             className="md:text-lg text-secondary-foreground max-w-none"
             dangerouslySetInnerHTML={{
