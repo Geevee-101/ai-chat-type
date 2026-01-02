@@ -38,5 +38,9 @@ export const loginValidator = () => [
 ];
 
 export const chatCompletionValidator = () => [
-  body("message").notEmpty().withMessage("Message is required"),
+  body("message")
+    .notEmpty()
+    .withMessage("Message is required")
+    .isLength({ max: 2000 })
+    .withMessage("Message must not exceed 2000 characters"),
 ];

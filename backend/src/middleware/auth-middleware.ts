@@ -48,8 +48,7 @@ export const authenticateUser = async (
     res.locals.user = user;
     next();
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in authenticateUser:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

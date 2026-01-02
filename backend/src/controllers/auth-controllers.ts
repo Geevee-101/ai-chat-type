@@ -4,23 +4,6 @@ import { generateToken } from "../utils/token-manager.js";
 import { COOKIE_NAME } from "../utils/constants.js";
 import User from "../models/User.js";
 
-export const getAllUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const users = await User.find();
-    return res
-      .status(200)
-      .json({ message: "Users fetched successfully", users });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
-  }
-};
-
 export const userSignup = async (
   req: Request,
   res: Response,
@@ -34,7 +17,6 @@ export const userSignup = async (
     }
     const hashedPassword = await hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
-    await user.save();
 
     // create and store the token
     res.clearCookie(COOKIE_NAME, {
@@ -59,9 +41,8 @@ export const userSignup = async (
       email: user.email,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in userSignup:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -104,9 +85,8 @@ export const userLogin = async (
       email: user.email,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in userLogin:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -126,8 +106,7 @@ export const userLogout = async (
       message: "User logged out successfully",
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in userLogout:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

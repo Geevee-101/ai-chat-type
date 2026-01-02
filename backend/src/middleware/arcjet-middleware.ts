@@ -20,12 +20,15 @@ export const arcjetProtection = async (
             error: "Too Many Requests. Please try again later.",
           }),
         );
+        return;
       } else if (decision.reason.isBot()) {
         res.writeHead(403, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "No bots allowed" }));
+        return;
       } else {
         res.writeHead(403, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ error: "Forbidden" }));
+        return;
       }
     }
 
@@ -33,6 +36,7 @@ export const arcjetProtection = async (
     if (decision.results.some(isSpoofedBot)) {
       res.writeHead(403, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "No spoofed bots allowed" }));
+      return;
     }
 
     next();

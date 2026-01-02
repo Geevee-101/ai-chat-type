@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  getAllUsers,
   userLogin,
   userSignup,
   userLogout,
@@ -20,7 +19,6 @@ const userRoutes = Router();
 
 userRoutes.use(arcjetProtection);
 
-userRoutes.get("/", getAllUsers);
 userRoutes.post("/signup", validate(signupValidator()), userSignup);
 userRoutes.post("/login", validate(loginValidator()), userLogin);
 userRoutes.get("/verify", authenticateToken, authenticateUser, (_, res) => {

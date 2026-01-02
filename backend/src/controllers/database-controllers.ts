@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import { hash } from "bcrypt";
+import { Request, Response } from "express";
 
 const defaultUsers = [
   {
@@ -17,7 +18,7 @@ const shinjiDefaultChats = [
   },
 ];
 
-export const resetDatabase = async (req, res) => {
+export const resetDatabase = async (req: Request, res: Response) => {
   try {
     // Delete everything first
     await User.deleteMany({});

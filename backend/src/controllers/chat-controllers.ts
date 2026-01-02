@@ -55,9 +55,8 @@ export const getUserChats = async (
     const user = res.locals.user;
     return res.status(200).json({ chats: user.chats });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in getUserChats:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -77,8 +76,7 @@ export const deleteUserChats = async (
     await user.save();
     return res.status(200).json({ message: "Chats deleted successfully" });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal server error", cause: error.message });
+    console.error("Error in deleteUserChats:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
