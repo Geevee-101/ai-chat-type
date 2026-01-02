@@ -10,19 +10,28 @@ const defaultUsers = [
   },
 ];
 
-const shinjiDefaultChats = [
-  { role: "user", content: "Hello, World!" },
-  {
-    role: "assistant",
-    content: "Hello! How can I assist you today?",
-  },
-];
-
 export const resetDatabase = async (req: Request, res: Response) => {
   try {
     // Delete everything first
     await User.deleteMany({});
     console.log("All users deleted successfully.");
+
+    // Create default chats with current timestamps
+    const now = new Date();
+    const shinjiDefaultChats = [
+      {
+        role: "user",
+        content: "Hello, World!",
+        createdAt: now,
+        updatedAt: now,
+      },
+      {
+        role: "assistant",
+        content: "Hello! How can I assist you today?",
+        createdAt: now,
+        updatedAt: now,
+      },
+    ];
 
     // Create default users and add default chats
     await Promise.all(

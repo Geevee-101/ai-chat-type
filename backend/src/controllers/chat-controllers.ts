@@ -13,7 +13,13 @@ export const createChatCompletion = async (
   const user = res.locals.user;
 
   const chats = user.chats;
-  chats.push({ role: "user", content: message });
+  const userChat = {
+    role: "user",
+    content: message,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  chats.push(userChat);
   user.chats = chats;
 
   try {
@@ -29,7 +35,13 @@ export const createChatCompletion = async (
         .json({ message: "Failed to generate chat response" });
     }
 
-    user.chats.push({ role: "assistant", content: assistantMessage });
+    const assistantChat = {
+      role: "assistant",
+      content: assistantMessage,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    user.chats.push(assistantChat);
     await user.save();
   } catch (error: unknown) {
     const cause = error instanceof Error ? error.message : String(error);
