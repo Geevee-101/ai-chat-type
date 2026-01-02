@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatItem from "../components/chats/chat-item";
 import { fetchUserChats, sendChatRequest } from "../api/chat";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ export function Chat() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
+  const [streamingContent, setStreamingContent] = useState("");
 
   // Tanstack Query: Fetch chat messages
   const {
@@ -38,7 +39,15 @@ export function Chat() {
 
   // Tanstack Query: Send chat message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: sendChatRequest,
+    mutationFn: async (newMessage: string) => {
+      // Reset streaming content
+      setStreamingContent("");
+
+      // Call streaming API with chunk handler
+      return await sendChatRequest(newMessage, (chunk) => {
+        setStreamingContent((prev) => prev + chunk);
+      });
+    },
     onMutate: async (newMessage) => {
       // Cancel ongoing queries to avoid race conditions
       await queryClient.cancelQueries({ queryKey: ["chats"] });
@@ -70,7 +79,8 @@ export function Chat() {
       return { previousChats };
     },
     onSuccess: () => {
-      // Refetch to get AI response from server
+      // Clear streaming content and refetch to get complete response from server
+      setStreamingContent("");
       queryClient.invalidateQueries({ queryKey: ["chats"] });
     },
     onError: (_error, _variables, context) => {
@@ -78,6 +88,7 @@ export function Chat() {
       if (context?.previousChats) {
         queryClient.setQueryData(["chats"], context.previousChats);
       }
+      setStreamingContent("");
       toast.error("Failed to send message.");
     },
   });
@@ -118,6 +129,18 @@ export function Chat() {
     });
   }, [chatMessages.length]);
 
+  // Auto-scroll during streaming
+  useEffect(() => {
+    if (streamingContent) {
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({
+          block: "end",
+          behavior: "smooth",
+        });
+      });
+    }
+  }, [streamingContent]);
+
   return (
     <div className="h-full flex flex-col relative items-center">
       {/* CONTROL PANEL */}
@@ -157,7 +180,10 @@ export function Chat() {
                 </p>
               </div>
             )}
-            {sendMessageMutation.isPending && (
+            {sendMessageMutation.isPending && streamingContent && (
+              <ChatItem role="assistant" content={streamingContent} />
+            )}
+            {sendMessageMutation.isPending && !streamingContent && (
               <ChatItem
                 role="assistant"
                 content="Thinking..."

@@ -23,34 +23,52 @@ export const createChatCompletion = async (
   user.chats = chats;
 
   try {
-    const chatResponse = await openai.chat.completions.create({
+    // Set headers for Server-Sent Events (SSE)
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    // Create streaming completion
+    const stream = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: chats,
+      stream: true,
     });
 
-    const assistantMessage = chatResponse.choices?.[0]?.message?.content;
-    if (!assistantMessage) {
-      return res
-        .status(500)
-        .json({ message: "Failed to generate chat response" });
+    let fullResponse = "";
+
+    // Stream chunks to client
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      if (content) {
+        fullResponse += content;
+        // Send chunk as SSE
+        res.write(`data: ${JSON.stringify({ content })}\n\n`);
+      }
     }
 
+    // Send completion signal
+    res.write(`data: [DONE]\n\n`);
+
+    // Save complete response to database
     const assistantChat = {
       role: "assistant",
-      content: assistantMessage,
+      content: fullResponse,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     user.chats.push(assistantChat);
     await user.save();
+
+    res.end();
   } catch (error: unknown) {
     const cause = error instanceof Error ? error.message : String(error);
-    return res.status(500).json({ message: "OpenAI request failed", cause });
+    console.error("OpenAI streaming error:", error);
+    res.write(
+      `data: ${JSON.stringify({ error: "OpenAI request failed", cause })}\n\n`,
+    );
+    res.end();
   }
-
-  return res.status(200).json({
-    message: user.chats,
-  });
 };
 
 export const getUserChats = async (
