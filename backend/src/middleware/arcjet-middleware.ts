@@ -14,29 +14,19 @@ export const arcjetProtection = async (
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
-        res.writeHead(429, { "Content-Type": "application/json" });
-        res.end(
-          JSON.stringify({
-            error: "Too Many Requests. Please try again later.",
-          }),
-        );
-        return;
+        return res.status(429).json({
+          message: "Too Many Requests. Please try again later.",
+        });
       } else if (decision.reason.isBot()) {
-        res.writeHead(403, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "No bots allowed" }));
-        return;
+        return res.status(403).json({ message: "No bots allowed" });
       } else {
-        res.writeHead(403, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Forbidden" }));
-        return;
+        return res.status(403).json({ message: "Forbidden" });
       }
     }
 
     // check for spoofed bots
     if (decision.results.some(isSpoofedBot)) {
-      res.writeHead(403, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "No spoofed bots allowed" }));
-      return;
+      return res.status(403).json({ message: "No spoofed bots allowed" });
     }
 
     next();

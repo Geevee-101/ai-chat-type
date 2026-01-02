@@ -43,7 +43,7 @@ export const authenticateUser = async (
     if (!user) {
       return res
         .status(401)
-        .json({ message: "Unauthorized, user not found or token invalid." });
+        .json({ message: "Unauthorized, user not found or token invalid" });
     }
     res.locals.user = user;
     next();
