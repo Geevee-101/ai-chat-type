@@ -9,8 +9,11 @@ import {
   authenticateToken,
   authenticateUser,
 } from "../middleware/auth-middleware.js";
+import { arcjetProtection } from "../middleware/arcjet-middleware.js";
 
 const chatsRoutes = Router();
+
+chatsRoutes.use(arcjetProtection);
 
 chatsRoutes.post(
   "/",

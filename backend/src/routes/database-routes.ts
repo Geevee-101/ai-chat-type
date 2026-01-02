@@ -1,11 +1,10 @@
 import { Router } from "express";
-import {
-  authenticateToken,
-  authenticateUser,
-} from "../middleware/auth-middleware.js";
+import { arcjetProtection } from "../middleware/arcjet-middleware.js";
 import { resetDatabase } from "../controllers/database-controllers.js";
 
 const databaseRoutes = Router();
+
+databaseRoutes.use(arcjetProtection);
 
 databaseRoutes.post("/reset", resetDatabase);
 

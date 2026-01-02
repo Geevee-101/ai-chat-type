@@ -65,7 +65,16 @@ function App() {
                 </PublicRoute>
               }
             />
-            <Route path="*" element={<NotFound />} />
+            <Route
+              path="*"
+              element={
+                <PublicRoute>
+                  <PageContainer>
+                    <NotFound />
+                  </PageContainer>
+                </PublicRoute>
+              }
+            />
           </Routes>
         </main>
         <Toaster />

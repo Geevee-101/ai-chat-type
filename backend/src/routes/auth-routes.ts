@@ -14,8 +14,11 @@ import {
   authenticateToken,
   authenticateUser,
 } from "../middleware/auth-middleware.js";
+import { arcjetProtection } from "../middleware/arcjet-middleware.js";
 
 const userRoutes = Router();
+
+userRoutes.use(arcjetProtection);
 
 userRoutes.get("/", getAllUsers);
 userRoutes.post("/signup", validate(signupValidator()), userSignup);
