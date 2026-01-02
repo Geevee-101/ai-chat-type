@@ -24,7 +24,14 @@ export function Chat() {
     data: chatMessages = [],
     isLoading,
     error,
-  } = useQuery<Array<{ role: "user" | "assistant"; content: string }>>({
+  } = useQuery<
+    Array<{
+      role: "user" | "assistant";
+      content: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }>
+  >({
     queryKey: ["chats"],
     queryFn: fetchUserChats,
   });
@@ -42,9 +49,21 @@ export function Chat() {
       // Optimistically add user message immediately
       queryClient.setQueryData(
         ["chats"],
-        (old: Array<{ role: "user" | "assistant"; content: string }> = []) => [
+        (
+          old: Array<{
+            role: "user" | "assistant";
+            content: string;
+            createdAt: Date;
+            updatedAt: Date;
+          }> = [],
+        ) => [
           ...old,
-          { role: "user", content: newMessage },
+          {
+            role: "user",
+            content: newMessage,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
         ],
       );
 
