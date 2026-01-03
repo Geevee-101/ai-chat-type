@@ -187,11 +187,15 @@ export function Chat() {
                 )}
               </>
             ) : (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
-                <p className="text-muted-foreground text-center">
-                  Ask a question or start a conversation.
-                </p>
-              </div>
+              <>
+                {!isLoading && (
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
+                    <p className="text-muted-foreground text-center">
+                      Ask a question or start a conversation.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
             <div ref={messagesEndRef} className="pt-28" />
           </div>
