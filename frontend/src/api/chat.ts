@@ -7,7 +7,7 @@ export const sendChatRequest = async (
   const baseURL =
     import.meta.env.MODE === "development"
       ? "http://localhost:3000/api/v1"
-      : "/api/v1";
+      : import.meta.env.VITE_API_URL || "/api/v1";
 
   const response = await fetch(`${baseURL}/chats`, {
     method: "POST",
