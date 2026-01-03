@@ -8,8 +8,8 @@ export function UserAvatar() {
     <Avatar>
       {/* <AvatarImage src={auth?.user?.image || undefined} alt="User" /> */}
       <AvatarFallback>
-        {auth?.user?.name?.slice(0, 1)}
-        {auth?.user?.name?.split(" ")[1]?.slice(0, 1) || "U"}
+        {auth?.user?.name?.slice(0, 1) || "U"}
+        {auth?.user?.name?.split(" ")[1]?.slice(0, 1)}
       </AvatarFallback>
     </Avatar>
   );

@@ -78,10 +78,11 @@ export function Chat() {
 
       return { previousChats };
     },
-    onSuccess: () => {
-      // Clear streaming content and refetch to get complete response from server
+    onSuccess: async () => {
+      // Refetch to get complete response from server
+      await queryClient.invalidateQueries({ queryKey: ["chats"] });
+      // Clear streaming content AFTER refetch completes to avoid flicker
       setStreamingContent("");
-      queryClient.invalidateQueries({ queryKey: ["chats"] });
     },
     onError: (_error, _variables, context) => {
       // Rollback user message if send failed
@@ -166,29 +167,31 @@ export function Chat() {
               </div>
             )}
             {chatMessages.length > 0 ? (
-              chatMessages.map((message, index) => (
-                <ChatItem
-                  key={index}
-                  role={message.role}
-                  content={message.content}
-                />
-              ))
+              <>
+                {chatMessages.map((message, index) => (
+                  <ChatItem
+                    key={index}
+                    role={message.role}
+                    content={message.content}
+                  />
+                ))}
+                {sendMessageMutation.isPending && streamingContent && (
+                  <ChatItem role="assistant" content={streamingContent} />
+                )}
+                {sendMessageMutation.isPending && !streamingContent && (
+                  <ChatItem
+                    role="assistant"
+                    content="Thinking..."
+                    useSpinner={true}
+                  />
+                )}
+              </>
             ) : (
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
                 <p className="text-muted-foreground text-center">
                   Ask a question or start a conversation.
                 </p>
               </div>
-            )}
-            {sendMessageMutation.isPending && streamingContent && (
-              <ChatItem role="assistant" content={streamingContent} />
-            )}
-            {sendMessageMutation.isPending && !streamingContent && (
-              <ChatItem
-                role="assistant"
-                content="Thinking..."
-                useSpinner={true}
-              />
             )}
             <div ref={messagesEndRef} className="pt-28" />
           </div>
