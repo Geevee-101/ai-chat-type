@@ -16,7 +16,11 @@ function App() {
 
   function ProtectedRoute({ children }: { children: JSX.Element }) {
     if (auth?.isLoading) {
-      return <PageLoader />;
+      return (
+        <PageContainer>
+          <PageLoader />
+        </PageContainer>
+      );
     }
 
     return auth?.isLoggedIn ? children : <Navigate to="/login" replace />;
@@ -24,7 +28,11 @@ function App() {
 
   function PublicRoute({ children }: { children: JSX.Element }) {
     if (auth?.isLoading) {
-      return <PageLoader />;
+      return (
+        <PageContainer>
+          <PageLoader />
+        </PageContainer>
+      );
     }
 
     return !auth?.isLoggedIn ? children : <Navigate to="/" replace />;
