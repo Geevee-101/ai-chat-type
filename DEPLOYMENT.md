@@ -56,15 +56,16 @@ This guide covers deploying the AI Chat Type application with:
    JWT_SECRET=<generate-random-string>
    COOKIE_SECRET=<generate-random-string>
    OPENAI_API_KEY=<your-openai-key>
+   OPENAI_PROJECT_ID=<your-openai-project-id> (optional)
    ARCJET_KEY=<your-arcjet-key>
    CLIENT_URL=<your-cloudflare-pages-url>
    ```
 
-6. Click **Create Web Service**
+6. Click **Deploy Web Service**
 
 ### Option B: Deploy via render.yaml
 
-1. Push the `render.yaml` file to your repository
+1. Push the `render.yaml` file (or edit region first if you wish) to your repository
 2. In Render Dashboard, click **New +** → **Blueprint**
 3. Connect your repository
 4. Render will auto-detect the `render.yaml` and create the service
@@ -87,12 +88,12 @@ https://ai-chat-type-backend.onrender.com
 ### Deploy to Cloudflare Pages
 
 1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Navigate to **Workers & Pages** → **Create application** → **Pages**
+2. Navigate to **Workers & Pages** → **Create application** → **Looking to deploy Pages? Get started**
 3. Connect your GitHub repository
 4. Configure:
    - **Project name:** `ai-chat-type`
    - **Production branch:** `main`
-   - **Framework preset:** `Vite`
+   - **Framework preset:** `React (Vite)`
    - **Build command:** `npm run build`
    - **Build output directory:** `dist`
    - **Root directory:** `frontend`
@@ -179,16 +180,17 @@ CLIENT_URL=https://chat.yourdomain.com
 
 ### Backend (Render)
 
-| Variable         | Description               | Example                          |
-| ---------------- | ------------------------- | -------------------------------- |
-| `NODE_ENV`       | Environment mode          | `production`                     |
-| `PORT`           | Server port               | `3000`                           |
-| `MONGODB_URL`    | MongoDB connection string | `mongodb+srv://...`              |
-| `JWT_SECRET`     | JWT signing secret        | Random 32+ char string           |
-| `COOKIE_SECRET`  | Cookie signing secret     | Random 32+ char string           |
-| `OPENAI_API_KEY` | OpenAI API key            | `sk-proj-...`                    |
-| `ARCJET_KEY`     | Arcjet security key       | `ajkey_...`                      |
-| `CLIENT_URL`     | Frontend URL              | `https://ai-chat-type.pages.dev` |
+| Variable            | Description                  | Example                          |
+| ------------------- | ---------------------------- | -------------------------------- |
+| `NODE_ENV`          | Environment mode             | `production`                     |
+| `PORT`              | Server port                  | `3000`                           |
+| `MONGODB_URL`       | MongoDB connection string    | `mongodb+srv://...`              |
+| `JWT_SECRET`        | JWT signing secret           | Random 32+ char string           |
+| `COOKIE_SECRET`     | Cookie signing secret        | Random 32+ char string           |
+| `OPENAI_API_KEY`    | OpenAI API key               | `sk-proj-...`                    |
+| `OPENAI_PROJECT_ID` | OpenAI project ID (optional) | `proj_...`                       |
+| `ARCJET_KEY`        | Arcjet security key          | `ajkey_...`                      |
+| `CLIENT_URL`        | Frontend URL                 | `https://ai-chat-type.pages.dev` |
 
 ### Frontend (Cloudflare Pages)
 
