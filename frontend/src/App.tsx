@@ -31,7 +31,7 @@ function App() {
   }
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="h-screen flex flex-col">
         <main className="flex-1 overflow-auto">
           <Routes>
