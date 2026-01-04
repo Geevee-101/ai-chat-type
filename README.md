@@ -2,6 +2,10 @@
 
 A full-stack AI-powered chat application built with React, Express, and OpenAI's GPT-4o-mini.
 
+## 🌐 Live Demo
+
+Check out the live application: [https://ai-chat-type.aidikhalid.com/](https://ai-chat-type.aidikhalid.com/)
+
 ## Features
 
 - 🤖 **AI Chat Interface** - Real-time conversations with OpenAI GPT-4o-mini
