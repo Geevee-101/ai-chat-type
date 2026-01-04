@@ -155,7 +155,7 @@ export function Login() {
             <Button variant="outline" className="w-full" asChild>
               <Link to="/signup">SIGN UP FOR NEW ACCOUNT</Link>
             </Button>
-            <Separator className="my-2" />
+            <Separator className="md:my-2" />
             <ResetDatabase />
           </CardFooter>
         </Card>
