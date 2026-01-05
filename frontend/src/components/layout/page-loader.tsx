@@ -1,13 +1,13 @@
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 
-export function PageLoader({ publicRoute }: { publicRoute: boolean }) {
+export function PageLoader() {
   const [showBackendMessage, setShowBackendMessage] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowBackendMessage(true);
-    }, 5000); // 5 seconds
+    }, 8000); // 8 seconds
 
     return () => clearTimeout(timer);
   }, []);
@@ -16,12 +16,7 @@ export function PageLoader({ publicRoute }: { publicRoute: boolean }) {
       <div className="flex flex-col items-center gap-2">
         <Spinner />
         <p className="text-muted-foreground">Loading...</p>
-        {publicRoute && showBackendMessage && (
-          <p className="text-muted-foreground">
-            Waking up the server. This may take a moment.
-          </p>
-        )}
-        {!publicRoute && showBackendMessage && (
+        {showBackendMessage && (
           <p className="text-muted-foreground">
             This may take a moment. Please wait.
           </p>
