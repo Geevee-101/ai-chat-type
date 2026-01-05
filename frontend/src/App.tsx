@@ -18,7 +18,7 @@ function App() {
     if (auth?.isLoading) {
       return (
         <PageContainer>
-          <PageLoader />
+          <PageLoader publicRoute={false} />
         </PageContainer>
       );
     }
@@ -30,7 +30,7 @@ function App() {
     if (auth?.isLoading) {
       return (
         <PageContainer>
-          <PageLoader />
+          <PageLoader publicRoute={true} />
         </PageContainer>
       );
     }
