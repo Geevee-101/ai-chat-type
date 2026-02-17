@@ -203,8 +203,8 @@ This project is open source and available under the MIT License.
 
 **Aidi Khalid**
 
-- GitHub: [@Geevee-101](https://github.com/Geevee-101)
-- LinkedIn: [Aidi Khalid](https://www.linkedin.com/in/aidikhalid/)
+- GitHub: [@aidikhalid](https://github.com/aidikhalid)
+- LinkedIn: [Aidi Khalid](https://www.linkedin.com/in/aidikhalid)
 
 ## Acknowledgments
 
